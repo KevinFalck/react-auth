@@ -53,9 +53,13 @@ const LoginPage = () => {
       }
       navigate("/offres/professionnelles");
     } catch (err) {
-      setError(
-        "Une erreur est survenue lors de la connexion. Veuillez réessayer."
-      );
+      if (err.status === 401) {
+        setError("Les identifiants sont incorrects. Veuillez réessayer.");
+      } else {
+        setError(
+          "Une erreur est survenue lors de la connexion. Veuillez réessayer."
+        );
+      }
       console.error("Login error:", err.status, err.message);
     }
   };
