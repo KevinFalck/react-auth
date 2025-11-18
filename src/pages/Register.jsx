@@ -17,7 +17,7 @@ const Register = () => {
     name: "",
     password: "",
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -28,7 +28,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(null);
 
     try {
       const response = await fetch(
@@ -46,19 +46,19 @@ const Register = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message || "Une erreur est survenue lors de l'inscription."
-        );
-        return;
+        throw {
+          message:
+            data.message || "Une erreur est survenue lors de l'inscription.",
+          status: response.status,
+        };
       }
 
       navigate("/connexion");
-      console.log("Form submitted:", formData);
     } catch (err) {
       setError(
         "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
       );
-      console.error("Registration error:", err);
+      console.error("Registration error:", err.status, err.message);
     }
   };
 
