@@ -1,12 +1,23 @@
 import { useState } from "react";
-import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router";
+import {
+  Form,
+  Button,
+  Container,
+  Card,
+  Row,
+  Col,
+  Alert,
+} from "react-bootstrap";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     name: "",
     password: "",
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -15,12 +26,40 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert)
-    // Redirect to Login on success
-    console.log("Form submitted:", formData);
+    setError("");
+
+    try {
+      const response = await fetch(
+        "https://offers-api.digistos.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(
+          data.message || "Une erreur est survenue lors de l'inscription."
+        );
+        return;
+      }
+
+      navigate("/connexion");
+      console.log("Form submitted:", formData);
+    } catch (err) {
+      setError(
+        "Une erreur est survenue lors de l'inscription. Veuillez réessayer."
+      );
+      console.error("Registration error:", err);
+    }
   };
 
   return (
@@ -29,6 +68,11 @@ const Register = () => {
         <Col xs={12} sm={8} md={6} lg={4}>
           <Card className="p-4 shadow-lg">
             <h1 className="text-center mb-4">Créer un compte</h1>
+            {error && (
+              <Alert variant="danger" className="mb-3">
+                {error}
+              </Alert>
+            )}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
