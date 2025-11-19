@@ -18,7 +18,7 @@ function Header() {
     const isValid =
       auth?.token && auth?.expiresAt && new Date(auth.expiresAt) > new Date();
 
-    setIsAuthenticated(!!isValid);
+    setIsAuthenticated(isValid);
   }, [location]);
 
   return (
