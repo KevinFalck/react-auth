@@ -8,28 +8,17 @@ function Header() {
   const location = useLocation();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const authData = localStorage.getItem("auth");
-      if (!authData) {
-        setIsAuthenticated(false);
-        return;
-      }
+    const authData = localStorage.getItem("auth");
+    if (!authData) {
+      setIsAuthenticated(false);
+      return;
+    }
 
-      try {
-        const auth = JSON.parse(authData);
-        const isValid =
-          auth &&
-          auth.token &&
-          auth.expiresAt &&
-          new Date(auth.expiresAt) > new Date();
+    const auth = JSON.parse(authData);
+    const isValid =
+      auth?.token && auth?.expiresAt && new Date(auth.expiresAt) > new Date();
 
-        setIsAuthenticated(isValid);
-      } catch {
-        setIsAuthenticated(false);
-      }
-    };
-
-    checkAuth();
+    setIsAuthenticated(!!isValid);
   }, [location]);
 
   return (
