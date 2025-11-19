@@ -16,18 +16,16 @@ const Offer = () => {
           {
             headers: {
               Accept: "application/json",
-              // Add Authorization token
+              Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("auth"))?.token
+              }`,
             },
           }
         );
 
-        const { data: offers, message } = await response.json();
-        
-        if (!response.ok) {
-          throw { status: response.status, message: message };
-        }
+        const data = await response.json();
 
-        setOffer(offers);
+        setOffer(data.data);
       } catch (err) {
         if (err.status === 403) {
           setError("Accès non autorisé (403).");

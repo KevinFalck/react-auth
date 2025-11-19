@@ -15,17 +15,17 @@ const OfferProList = () => {
           {
             headers: {
               Accept: "application/json",
-              // Add Authorization token
+              Authorization: `Bearer ${
+                JSON.parse(localStorage.getItem("auth"))?.token
+              }`,
             },
           }
         );
-
-        const { data: offers, message } = await response.json();
+        const data = await response.json();
         if (!response.ok) {
-          throw { status: response.status, message: message };
+          throw { status: response.status, message: data.message };
         }
-
-        setOffers(offers);
+        setOffers(data.data);
       } catch (err) {
         if (err.status === 401) {
           setError("Vous n'êtes pas autorisé à accéder aux offres (401).");
