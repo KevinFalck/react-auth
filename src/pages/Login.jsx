@@ -41,6 +41,7 @@ const LoginPage = () => {
             Accept: "application/json",
           },
           body: JSON.stringify(formData),
+          credentials: "include", // permet au navigateur de recevoir et stocker le cookie HttpOnly
         }
       );
       const data = await response.json();
@@ -51,6 +52,10 @@ const LoginPage = () => {
           status: response.status,
         };
       }
+      // Stocker uniquement la date d'expiration dans localStorage
+      localStorage.setItem('auth', JSON.stringify({
+        expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString()
+      }));
       navigate("/offres/professionnelles");
     } catch (err) {
       if (err.status === 401) {
