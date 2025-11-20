@@ -12,16 +12,36 @@ const Logout = () => {
     const handleLogout = async () => {
       try {
         if (token) {
-          await fetch("https://offers-api.digistos.com/api/auth/logout", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-            },
-          });
+          const response = await fetch(
+            "https://offers-api.digistos.com/api/auth/logout",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+              },
+            }
+          );
+
+          if (!response.ok) {
+            const data = await response.json();
+            throw {
+              status: response.status,
+              message: data.message || "Erreur lors de la déconnexion API",
+            };
+          }
+        } else {
+          throw {
+            status: 401,
+            message: "Aucun token disponible pour la déconnexion",
+          };
         }
       } catch (err) {
-        console.error("Erreur lors de la déconnexion API:", err);
+        console.error(
+          "Erreur lors de la déconnexion API:",
+          err.status,
+          err.message
+        );
       } finally {
         dispatch(logout());
 
