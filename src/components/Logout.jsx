@@ -8,10 +8,13 @@ const Logout = () => {
     const handleLogout = async () => {
       try {
         // (1) Appel API pour notifier la déconnexion
-        await fetch("https://offers-api.digistos.com/api/auth/logout", {
+        const response = await fetch("https://offers-api.digistos.com/api/auth/logout", {
           method: "POST",
           credentials: "include", // permet au navigateur d'envoyer le cookie HttpOnly
         });
+        if (!response.ok) {
+          throw new Error("Erreur lors de la déconnexion");
+        }
       } catch (err) {
         console.error("Erreur lors de la déconnexion:", err);
       } finally {
