@@ -8,22 +8,12 @@ function Header() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const getValidToken = () => {
-      try {
-        const authStr = localStorage.getItem("auth");
-        if (!authStr) return false;
-        const auth = JSON.parse(authStr);
-        if (!auth || !auth.expiresAt) return false;
-        const isValid = new Date(auth.expiresAt) > new Date();
-        return isValid;
-      } catch (err) {
-        // Si erreur de parsing, nettoyer le localStorage
-        localStorage.removeItem("auth");
-        return false;
-      }
-    };
-
-    setIsConnected(getValidToken());
+    const authData = JSON.parse(localStorage.getItem("auth"));
+    if (authData && new Date(authData.expiresAt) > new Date()) {
+      setIsConnected(true);
+    } else {
+      setIsConnected(false);
+    }
   }, [location]);
 
   return (

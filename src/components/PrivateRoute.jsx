@@ -6,25 +6,14 @@ const PrivateRoute = () => {
   const [canAccess, setCanAccess] = useState(false);
 
   useEffect(() => {
-    try {
-      const authStr = localStorage.getItem("auth");
-      if (!authStr) {
-        navigate("/connexion");
-        return;
-      }
-      const auth = JSON.parse(authStr);
-      const isValid = auth && auth.expiresAt && new Date(auth.expiresAt) > new Date();
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const isValid = auth && new Date(auth.expiresAt) > new Date();
 
-      if (!isValid) {
-        localStorage.removeItem("auth");
-        navigate("/connexion");
-      } else {
-        setCanAccess(true);
-      }
-    } catch (err) {
-      // Si erreur de parsing, nettoyer et rediriger
+    if (!isValid) {
       localStorage.removeItem("auth");
       navigate("/connexion");
+    } else {
+      setCanAccess(true);
     }
   }, [navigate]);
 
