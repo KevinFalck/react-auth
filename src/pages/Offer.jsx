@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Container, Card, Spinner, Alert } from "react-bootstrap";
 
 const Offer = () => {
   const { id } = useParams();
+  const token = useSelector((state) => state.auth.token);
   const [offer, setOffer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,13 +18,13 @@ const Offer = () => {
           {
             headers: {
               Accept: "application/json",
-              // Add Authorization token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
         const { data: offers, message } = await response.json();
-        
+
         if (!response.ok) {
           throw { status: response.status, message: message };
         }
@@ -41,7 +43,7 @@ const Offer = () => {
     };
 
     fetchOffer();
-  }, [id]);
+  }, [id, token]);
 
   if (loading)
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;
