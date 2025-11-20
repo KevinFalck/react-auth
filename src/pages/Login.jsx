@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../store/authSlice.jsx";
+import { loginSuccess } from "../store/authSlice";
 import {
   Form,
   Button,

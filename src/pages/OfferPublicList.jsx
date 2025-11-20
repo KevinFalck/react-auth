@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Spinner, Alert } from "react-bootstrap";
-import OfferList from "../components/OfferList.jsx";
+import OfferList from "../components/OfferList";
 
 const OfferPublicList = () => {
   const [offers, setOffers] = useState([]);
